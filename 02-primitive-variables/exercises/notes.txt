@@ -1,0 +1,13 @@
+Terminar esto
+
+1. Número primo
+
+2. Patrón con loops, imprime esto usando loops:
+
+*
+**
+***
+****
+*****
+
+3. Fibonacci con loops
