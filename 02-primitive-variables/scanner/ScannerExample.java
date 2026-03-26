@@ -18,5 +18,6 @@ public class ScannerExample {
     String subtractionMessage = "The subtraction of " + firstNumber + " - " + secondNumber + " = " + subtraction;
     System.out.println(additionMessage);
     System.out.println(subtractionMessage);
+    scanner.close();
   }
 }
