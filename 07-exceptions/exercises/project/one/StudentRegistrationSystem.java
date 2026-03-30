@@ -1,7 +1,6 @@
 package exercises.project.one;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,9 +12,14 @@ public class StudentRegistrationSystem {
 
   public StudentRegistrationSystem() {
     this.students = new ArrayList<>();
-    this.students.add(new Student("A00001", "Derek", 23));
-    this.students.add(new Student("A00002", "Alan", 26));
-    this.students.add(new Student("A00003", "Pau", 25));
+    try {
+      this.students.add(new Student("A0001", "Derek", 23));
+      this.students.add(new Student("A0002", "Alan", 26));
+      this.students.add(new Student("A0003", "Pau", 25));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     this.scanner = new Scanner(System.in);
   }
 
@@ -65,16 +69,29 @@ public class StudentRegistrationSystem {
 
   public Integer scannerInteger(String msg) {
     System.out.print(msg);
-    return this.scanner.nextInt();
+    Integer intValue = null;
+    try {
+      intValue = this.scanner.nextInt();
+    } catch (Exception e) {
+      System.out.println("Write only numbers");
+    }
+
+    return intValue;
   }
 
   public Student createStudent() {
-    System.out.print("id:");
-    String id = this.scanner.next();
-    System.out.print("name:");
-    String name = this.scanner.next();
+    String id = this.scannerString("id:");
+    String name = this.scannerString("name:");
     Integer age = this.scannerInteger("age:");
-    return Student.createStudent(id, name, age);
+
+    Student newStudent = null;
+    try {
+      newStudent = new Student(id, name, age);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return newStudent;
   }
 
   public void addStudent() {
@@ -87,7 +104,7 @@ public class StudentRegistrationSystem {
   public void removeStudent() {
     System.out.print("id:");
     String id = this.scanner.next();
-    this.students.removeIf(s -> s.id.equals(id));
+    this.students.removeIf(s -> id.equals(id));
     System.out.println("Student removed!");
   }
 

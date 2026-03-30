@@ -1,14 +1,39 @@
 package exercises.project.one;
 
-public class Student {
-  public String id;
-  public String name;
-  public Integer age;
+import exercises.project.one.validations.InvalidAgeException;
+import exercises.project.one.validations.InvalidIdException;
+import exercises.project.one.validations.InvalidNameException;
 
-  public Student(String id, String name, Integer age) {
-    this.id = id;
-    this.name = name;
+public class Student {
+  private String id;
+  private String name;
+  private Integer age;
+
+  public Student(String id, String name, Integer age) throws Exception {
+    this.validateName(name);
+    this.validateId(id);
+    this.validateAge(age);
+    this.id = id.trim();
+    this.name = name.trim();
     this.age = age;
+  }
+
+  public void validateName(String name) throws InvalidNameException {
+    if (name == null || name.trim().isEmpty()) {
+      throw new InvalidNameException("The name must not be empty");
+    }
+  }
+
+  public void validateAge(Integer age) throws InvalidAgeException {
+    if (age == null || age < 17 || age > 100) {
+      throw new InvalidAgeException("The age must be between 17 and 100");
+    }
+  }
+
+  public void validateId(String id) throws InvalidIdException {
+    if (id == null || id.trim().length() != 5) {
+      throw new InvalidIdException("The id must have exactly five characters");
+    }
   }
 
   @Override
@@ -20,7 +45,8 @@ public class Student {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(String id) throws Exception {
+    this.validateId(id);
     this.id = id;
   }
 
@@ -28,7 +54,8 @@ public class Student {
     return name;
   }
 
-  public void setName(String name) {
+  public void setName(String name) throws InvalidNameException {
+    this.validateName(name);
     this.name = name;
   }
 
@@ -36,12 +63,9 @@ public class Student {
     return age;
   }
 
-  public void setAge(Integer age) {
+  public void setAge(Integer age) throws Exception {
+    this.validateAge(age);
     this.age = age;
-  }
-
-  public static Student createStudent(String id, String name, Integer age) {
-    return new Student(id, name, age);
   }
 
 }

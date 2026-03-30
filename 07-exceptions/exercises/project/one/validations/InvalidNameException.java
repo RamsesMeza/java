@@ -1,0 +1,9 @@
+package exercises.project.one.validations;
+
+public class InvalidNameException extends Exception {
+
+  public InvalidNameException(String message) {
+    super(message);
+  }
+
+}
