@@ -10,22 +10,19 @@ import exercises.project.one.validations.StudentNotFoundException;
 
 public class StudentRegistrationSystem implements AutoCloseable {
 
-  private StudentService studentService;
-  private Scanner scanner;
+  private final StudentService studentService;
+  private final Scanner scanner;
 
-  public StudentRegistrationSystem()
-      throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException {
-    this.studentService = new StudentService();
-    this.studentService.init();
+  public StudentRegistrationSystem(StudentService studentService) {
+    this.studentService = studentService;
     this.scanner = new Scanner(System.in);
   }
 
-  public void start() throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException,
-      StudentNotFoundException {
-    Integer option;
+  public void start() {
+    int option;
     do {
       this.printMenu();
-      option = this.scanner.nextInt();
+      option = this.scannerInteger("Select an option:");
       this.processOption(option);
     } while (option != 4);
   }
@@ -36,12 +33,9 @@ public class StudentRegistrationSystem implements AutoCloseable {
     System.out.println("2. Remove a student");
     System.out.println("3. Show students");
     System.out.println("4. Leave program");
-    System.out.print("Enter the number of the selected option:");
-
   }
 
-  public void processOption(Integer option) throws InvalidAgeException, InvalidIdException, InvalidNameException,
-      StudentDuplicatedException, StudentNotFoundException {
+  public void processOption(int option) {
     switch (option) {
       case 1:
         this.createStudent();
@@ -64,33 +58,46 @@ public class StudentRegistrationSystem implements AutoCloseable {
 
   public String scannerString(String msg) {
     System.out.print(msg);
-    return this.scanner.next();
+    String text = this.scanner.next();
+    this.scanner.nextLine();
+    return text;
   }
 
   public Integer scannerInteger(String msg) {
-    System.out.print(msg);
-    Integer intValue = null;
-    try {
-      intValue = this.scanner.nextInt();
-    } catch (Exception e) {
-      System.out.println("Write only numbers");
+    while (true) {
+      System.out.print(msg);
+      if (this.scanner.hasNextInt()) {
+        int value = scanner.nextInt();
+        scanner.nextLine();
+        return value;
+      } else {
+        System.out.println("Write only numbers");
+        scanner.nextLine();
+      }
     }
-
-    return intValue;
   }
 
-  public void createStudent()
-      throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException {
+  public void createStudent() {
     String id = this.scannerString("id:");
     String name = this.scannerString("name:");
     Integer age = this.scannerInteger("age:");
 
-    this.studentService.createStudent(id, name, age);
+    try {
+      Student student = this.studentService.createStudent(id, name, age);
+      System.out.println("Student created successfully: " + student);
+    } catch (InvalidAgeException | InvalidIdException | InvalidNameException | StudentDuplicatedException e) {
+      System.out.println("Error:  " + e.getMessage());
+    }
   }
 
-  public void removeStudent() throws StudentNotFoundException {
+  public void removeStudent() {
     String id = this.scannerString("id:");
-    this.studentService.removeStudent(id);
+    try {
+      Student student = this.studentService.removeStudent(id);
+      System.out.println("Student removed successfully: " + student);
+    } catch (StudentNotFoundException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
   }
 
   public void printStudents() {
@@ -101,7 +108,10 @@ public class StudentRegistrationSystem implements AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
+    if (this.scanner != null) {
+      this.scanner.close();
+    }
     System.out.println("The program has ended");
   }
 
