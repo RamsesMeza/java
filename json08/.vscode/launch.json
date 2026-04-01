@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "ListOnJsonExample",
+      "request": "launch",
+      "mainClass": "com.json.ListOnJsonExample",
+      "projectName": "json08"
+    },
+    {
+      "type": "java",
       "name": "FileReaderExample",
       "request": "launch",
       "mainClass": "com.json.FileReaderExample",

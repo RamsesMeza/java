@@ -10,10 +10,10 @@ public class FileWriterExample {
     Person personOne = new Person(1, "Derek");
     Gson gson = new Gson();
 
-    try (FileWriter file = new FileWriter("person.json")) {
+    try (FileWriter writer = new FileWriter("person.json")) {
 
-      String personJson = gson.toJson(personOne, personOne.getClass());
-      file.write(personJson);
+      String personJson = gson.toJson(personOne);
+      writer.write(personJson);
 
     } catch (IOException e) {
       System.out.println("Error: " + e.getMessage());
