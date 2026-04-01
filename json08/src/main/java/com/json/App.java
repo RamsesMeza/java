@@ -11,5 +11,19 @@ public class App {
 
         System.out.println(personJson);
 
+        String json = """
+                {
+                    "id": 123,
+                    "name": "Ramses",
+                    "name2": "X"
+                }
+                """;
+
+        Person personTwo = gson.fromJson(json, Person.class);
+        Person personThree = gson.fromJson(personJson, Person.class);
+
+        System.out.println(personTwo);
+        System.out.println(personThree);
+
     }
 }
