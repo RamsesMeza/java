@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "FileReaderExample",
+      "request": "launch",
+      "mainClass": "com.json.FileReaderExample",
+      "projectName": "json08"
+    },
+    {
+      "type": "java",
+      "name": "FileWriterExample",
+      "request": "launch",
+      "mainClass": "com.json.FileWriterExample",
+      "projectName": "json08"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}"
