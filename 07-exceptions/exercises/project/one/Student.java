@@ -9,7 +9,8 @@ public class Student {
   private String name;
   private Integer age;
 
-  public Student(String id, String name, Integer age) throws Exception {
+  public Student(String id, String name, Integer age)
+      throws InvalidAgeException, InvalidIdException, InvalidNameException {
     this.validateName(name);
     this.validateId(id);
     this.validateAge(age);
@@ -31,7 +32,7 @@ public class Student {
   }
 
   public void validateId(String id) throws InvalidIdException {
-    if (id == null || id.trim().length() != 5) {
+    if (id == null || !id.trim().matches("A\\d{4}")) {
       throw new InvalidIdException("The id must have exactly five characters");
     }
   }
@@ -45,7 +46,7 @@ public class Student {
     return id;
   }
 
-  public void setId(String id) throws Exception {
+  public void setId(String id) throws InvalidIdException {
     this.validateId(id);
     this.id = id;
   }
@@ -63,7 +64,7 @@ public class Student {
     return age;
   }
 
-  public void setAge(Integer age) throws Exception {
+  public void setAge(Integer age) throws InvalidAgeException {
     this.validateAge(age);
     this.age = age;
   }

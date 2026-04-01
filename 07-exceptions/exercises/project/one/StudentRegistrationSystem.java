@@ -1,34 +1,33 @@
 package exercises.project.one;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class StudentRegistrationSystem {
+import exercises.project.one.validations.InvalidAgeException;
+import exercises.project.one.validations.InvalidIdException;
+import exercises.project.one.validations.InvalidNameException;
+import exercises.project.one.validations.StudentDuplicatedException;
+import exercises.project.one.validations.StudentNotFoundException;
 
-  private List<Student> students;
+public class StudentRegistrationSystem implements AutoCloseable {
+
+  private StudentService studentService;
   private Scanner scanner;
-  private Integer option;
 
-  public StudentRegistrationSystem() {
-    this.students = new ArrayList<>();
-    try {
-      this.students.add(new Student("A0001", "Derek", 23));
-      this.students.add(new Student("A0002", "Alan", 26));
-      this.students.add(new Student("A0003", "Pau", 25));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
+  public StudentRegistrationSystem()
+      throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException {
+    this.studentService = new StudentService();
+    this.studentService.init();
     this.scanner = new Scanner(System.in);
   }
 
-  public void start() {
+  public void start() throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException,
+      StudentNotFoundException {
+    Integer option;
     do {
       this.printMenu();
-      this.option = this.scanner.nextInt();
-      this.processOption();
-    } while (this.option != 4);
+      option = this.scanner.nextInt();
+      this.processOption(option);
+    } while (option != 4);
   }
 
   public void printMenu() {
@@ -41,16 +40,17 @@ public class StudentRegistrationSystem {
 
   }
 
-  public void processOption() {
-    switch (this.option) {
+  public void processOption(Integer option) throws InvalidAgeException, InvalidIdException, InvalidNameException,
+      StudentDuplicatedException, StudentNotFoundException {
+    switch (option) {
       case 1:
-        this.addStudent();
+        this.createStudent();
         break;
       case 2:
         this.removeStudent();
         break;
       case 3:
-        this.showStudents();
+        this.printStudents();
         break;
       case 4:
         System.out.println("Thanks for using the program!");
@@ -79,44 +79,30 @@ public class StudentRegistrationSystem {
     return intValue;
   }
 
-  public Student createStudent() {
+  public void createStudent()
+      throws InvalidAgeException, InvalidIdException, InvalidNameException, StudentDuplicatedException {
     String id = this.scannerString("id:");
     String name = this.scannerString("name:");
     Integer age = this.scannerInteger("age:");
 
-    Student newStudent = null;
-    try {
-      newStudent = new Student(id, name, age);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return newStudent;
+    this.studentService.createStudent(id, name, age);
   }
 
-  public void addStudent() {
-    Student newStudent = this.createStudent();
-    this.students.add(newStudent);
-    System.out.println("Student added correctly!");
-
+  public void removeStudent() throws StudentNotFoundException {
+    String id = this.scannerString("id:");
+    this.studentService.removeStudent(id);
   }
 
-  public void removeStudent() {
-    System.out.print("id:");
-    String id = this.scanner.next();
-    this.students.removeIf(s -> id.equals(id));
-    System.out.println("Student removed!");
-  }
-
-  public void showStudents() {
-    for (Student student : this.students) {
+  public void printStudents() {
+    System.out.println("\n--- List of Students ---");
+    for (Student student : this.studentService.getStudents()) {
       System.out.println(student);
     }
   }
 
   @Override
-  public String toString() {
-    return "StudentRegistrationSystem [students=" + students + "]";
+  public void close() throws Exception {
+    System.out.println("The program has ended");
   }
 
 }
