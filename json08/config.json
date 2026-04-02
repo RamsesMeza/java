@@ -1,0 +1,9 @@
+{
+  "appName": "XD",
+  "version": "1.0.0",
+  "settings": {
+    "theme": "dark",
+    "notification": true,
+    "language": "es"
+  }
+}
